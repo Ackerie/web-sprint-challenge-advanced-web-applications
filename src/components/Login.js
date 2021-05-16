@@ -1,22 +1,77 @@
-import React, { useEffect } from "react";
+import axios from "axios";
+import React, { useState } from "react";
+import {  useHistory } from "react-router-dom";
+
+
+const initialState = {
+  username:'',
+  password:''
+}
+
 
 const Login = () => {
+  const  [login, setLogin ]= useState(initialState)
+
+  
   // make a post request to retrieve a token from the api
   // when you have handled the token, navigate to the BubblePage route
+ 
+  const {push} = useHistory()
+  const handleSubmit = e => {
+    e.preventDefault()
+    axios.post('http://localhost:5000/api/login', login)
+    .then(res => {
+      localStorage.setItem('token', res.data.payload)
+      push('/colors')
+    })
+    .catch(err => {
+      console.log(err)
+    })
 
-  useEffect(()=>{
-    // make a post request to retrieve a token from the api
-    // when you have handled the token, navigate to the BubblePage route
-  });
+    if (login.username === '' || login.password === '') {
+      setError('Username and password Required.')
+
+    }else if (login.username !== 'Lambda' || login.password !== 'I<3Lambd4'){
+      setError('Invaild Login')
+    }
+  }
+
+  const handleChange = e => {
+    const { name, value} = e.target
+    setLogin({...login,
+       [name]: value})
+  }
+
+
   
-  const error = "";
+  const [error, setError] = useState("");
   //replace with error state
 
   return (
     <div>
       <h1>Welcome to the Bubble App!</h1>
       <div data-testid="loginForm" className="login-form">
-        <h2>Build login form here</h2>
+        <form onSubmit={handleSubmit}>
+          <p>Login</p>
+        <div>
+          <input 
+        
+          onChange={handleChange}
+          type='text' 
+          placeholder='User Name'
+          />
+        </div>
+        <div>
+          <input
+          
+          onChange={handleChange}
+          type='password'
+          placeholder='********'
+          /></div>
+          
+
+          <button >Login</button>
+        </form>
       </div>
 
       <p data-testid="errorMessage" className="error">{error}</p>

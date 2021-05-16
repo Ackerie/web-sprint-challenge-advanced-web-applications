@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-
+import React from "react";
+import { BrowserRouter as Router, Route, Switch, Link, Redirect } from "react-router-dom";
+import BubblePage from './components/BubblePage'
+import PrivateRoute from './components/PrivateRoute'
 import Login from "./components/Login";
+
 import "./styles.scss";
 
 function App() {
@@ -12,9 +14,15 @@ function App() {
           Color Picker Sprint Challenge
           <a data-testid="logoutButton" href="#">logout</a>
         </header> 
-
-        <Route exact path="/" component={Login} />
-      </div>
+        {/* <Link to='login/'>Login</Link> */}
+    <Switch>
+        <PrivateRoute exact path="/colors" component={BubblePage} />
+        <Route exact path='/login' component={Login}/>
+        <Route path='/'>
+          <Redirect to='/login'/>
+        </Route>
+     </Switch> 
+     </div>
     </Router>
   );
 }

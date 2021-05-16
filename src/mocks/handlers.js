@@ -201,3 +201,9 @@ export const handlers = [
     );
   }),
 ];
+
+rest.post(`${urlBase}/logout`, (req, res) => {
+  res.status(200).json({
+    payload:token
+  })
+})
